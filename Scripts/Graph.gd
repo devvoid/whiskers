@@ -146,6 +146,7 @@ func process_data():
 	# lets save our GraphNodes!
 	for i in range(0, connectionList.size()):
 		var name = connectionList[i].from
+		var node = get_node(name)
 		# Our schema
 		var tempData = {
 				'text':"",
@@ -163,9 +164,10 @@ func process_data():
 		if name in data:
 			currentConnectsTo = data[name]['connects_to']
 		
+		var node_text = node.get_text()
 		# are we a node with a text field?
-		if ('Dialogue' in name) or ('Option' in name) or ('Expression' in name) or ('Jump' in name) or ('Comment' in name):
-			tempData['text'] = self.get_node(name).get_node('Lines').get_child(0).get_text()
+		if node_text != "":
+			tempData['text'] = node_text
 		
 		# are we an Expression Node? We should store the value in our logic field
 		if ('Expression' in name):
