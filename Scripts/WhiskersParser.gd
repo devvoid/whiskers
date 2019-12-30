@@ -10,21 +10,21 @@ func _init(base_instance : Object = null):
 	default_base_instance = base_instance
 	
 	if not base_instance:
-		print("[WARN]: no base_instance for calling expressions.")
+		print("[WARN]: No base instance for executing Expressions.")
 
 static func open_whiskers(file_path : String) -> Dictionary:
 	var file = File.new()
 	
 	var error = file.open(file_path, File.READ)
 	if error:
-		print("[ERROR]: couldn't open file at %s. Error number %s." % [file_path, error])
+		print("[ERROR]: couldn't open file at %s. Error code: %s." % [file_path, error])
 		return {}
 	
 	var dialogue_data = parse_json(file.get_as_text())
 	file.close()
 	
 	if not dialogue_data is Dictionary:
-		print("[ERROR]: failed to parse whiskers file. Is it a valid exported whiskers file?")
+		print("[ERROR]: Failed to parse file; not a dictionary")
 		return {}
 	
 	return dialogue_data
@@ -34,7 +34,7 @@ static func parse_whiskers(data : Dictionary) -> Dictionary:
 
 func start_dialogue(dialogue_data : Dictionary, custom_base_instance : Object = null) -> Dictionary:
 	if not dialogue_data.has("Start"):
-		print("[ERROR]: not a valid whiskers data, it has not the key Start.")
+		print("[ERROR]: Not valid Whiskers data, no Start node.")
 		return {}
 	
 	base_instance = custom_base_instance if custom_base_instance else default_base_instance
@@ -50,7 +50,7 @@ func end_dialogue() -> void:
 
 func next(selected_option_key : String = "") -> Dictionary:
 	if not data:
-		print("[WARN]: trying to call next() on a finalized dialogue.")
+		print("[WARN]: next() called on a finalized block.")
 		return {}
 	
 	if current_block.is_final:
@@ -116,7 +116,7 @@ func handle_condition(condition : Dictionary) -> Dictionary:
 	var next_block = {}
 	
 	if not result is bool:
-		print("[ERROR]: the expression used as input for a condition node should return a boolean, but it is returning %s instead." % result)
+		print("[ERROR]: Expression nodes connected to Conditions should return a boolean, but it is returning %s instead." % result)
 		return {}
 	
 	if result:
@@ -129,7 +129,7 @@ func handle_condition(condition : Dictionary) -> Dictionary:
 	return next_block
 
 func handle_jump(jump) -> Dictionary:
-	# Get the matching node to wich we are going
+	# Get the matching node to which we are going
 	var jumped_to = generate_block(jump.goes_to_key)
 	var next_block = {}
 	
@@ -155,7 +155,7 @@ func execute_expression(expression_text : String):
 	
 	var error = expression.parse(expression_text)
 	if error:
-		print("[ERROR]: unable to parse expression %s. Error: %s." % [expression_text, error])
+		print("[ERROR]: Unable to parse expression %s. Error: %s." % [expression_text, error])
 	else:
 		result = expression.execute([], base_instance, true)
 		if expression.has_execute_failed():
@@ -166,7 +166,7 @@ func execute_expression(expression_text : String):
 # A block is a Dictionary containing a node and every node it is connected to, by type and it's informations.
 func generate_block(node_key : String) -> Dictionary:
 	if not data.has(node_key):
-		print("[ERROR]: trying to create block from inexisting node %s. Aborting.", node_key)
+		print("[ERROR]: Trying to create block from nonexistant node %s. Aborting.", node_key)
 		return {}
 		
 	# Block template
@@ -278,7 +278,7 @@ func process_condition(passed_key : String) -> Dictionary:
 			break
 	
 	if not input_logic:
-		print("[ERROR]: no input for the condition node %s was found." % passed_key)
+		print("[ERROR]: No input for condition node %s was found." % passed_key)
 		return {}
 	
 	var condition = {
