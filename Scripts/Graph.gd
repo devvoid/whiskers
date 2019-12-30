@@ -1,5 +1,16 @@
 extends GraphEdit
 
+onready var NodeComment = preload("res://Scenes/Nodes/Comment.tscn")
+onready var NodeCondition = preload("res://Scenes/Nodes/Condition.tscn")
+onready var NodeDialogue = preload("res://Scenes/Nodes/Dialogue.tscn")
+onready var NodeEnd = preload("res://Scenes/Nodes/End.tscn")
+onready var NodeExpression = preload("res://Scenes/Nodes/Expression.tscn")
+onready var NodeJump = preload("res://Scenes/Nodes/Jump.tscn")
+onready var NodeOption = preload("res://Scenes/Nodes/Option.tscn")
+onready var NodeStart = preload("res://Scenes/Nodes/Start.tscn")
+
+onready var undo_redo = EditorSingleton.undo_redo
+
 var lastNodePosition = Vector2(0,0)
 var open = false
 var preFire = false
@@ -69,52 +80,61 @@ func _on_Dialogue_Graph_disconnection_request(from, from_slot, to, to_slot):
 func _on_BasicNodes_item_activated(index):
 	match index:
 		0:
-			init_scene("Dialogue.tscn", false)
+			add_graph_node(NodeDialogue)
 		1:
-			init_scene("Option.tscn", false)
+			add_graph_node(NodeOption)
 		2:
-			init_scene("Jump.tscn", false)
+			add_graph_node(NodeJump)
 
 func _on_AdvancedNodes_item_activated(index):
 	match index:
 		0:
-			init_scene("Condition.tscn", false)
+			add_graph_node(NodeCondition)
 		1:
-			init_scene("Expression.tscn", false)
+			add_graph_node(NodeExpression)
 
 func _on_UtilityNodes_item_activated(index):
 	match index:
 		0:
-			init_scene("Comment.tscn", false)
+			add_graph_node(NodeComment)
 		1:
-			init_scene("Start.tscn", false)
+			add_graph_node(NodeStart)
 		2:
-			init_scene("End.tscn", false)
+			add_graph_node(NodeEnd)
 
-func init_scene(e, location):
-	var scene = load("res://Scenes/Nodes/"+e)
+# Add a graph node
+func add_graph_node(scene):
 	var node = scene.instance()
-	var offset
 	
-	if !location:
-		offset = Vector2(lastNodePosition.x + 20, lastNodePosition.y + 20)
-	else:
-		offset = Vector2(location.x, location.y)
+	# TODO: Put node in center of screen instead
+	var offset = Vector2(lastNodePosition.x + 20, lastNodePosition.y + 20)
 	
-	get_node("./").add_child(node)
 	node.set_offset(offset)
 	node.set_name(node.get_name().replace('@', ''))
-	lastNodePosition = node.get_offset()
 	
-	#history management
-	EditorSingleton.overwrite_history()
-	EditorSingleton.add_history(e.split('.tscn')[0], node.name, offset, '', [], 'add')
+	undo_redo.create_action("add_node_"+node.name)
+	undo_redo.add_do_method(self, "_redo_add_node", scene, node.name, offset)
+	undo_redo.add_undo_method(self, "_undo_add_node", node.name)
+	undo_redo.commit_action()
+	
+	lastNodePosition = node.get_offset()
 	
 	EditorSingleton.update_stats(node.name, '1')
 	
-	EditorSingleton.has_graph = true
-	
 	return node.name
+
+# Undo adding a node
+func _undo_add_node(node_name):
+	var child_node = get_node(node_name)
+	remove_child(child_node)
+	child_node.queue_free()
+
+# Redo adding a node
+func _redo_add_node(scene, node_name, offset):
+	var new_node = scene.instance()
+	new_node.set_name(node_name)
+	new_node.set_offset(offset)
+	add_child(new_node)
 
 func load_node(type, location, name, text, size):
 	var scene = load("res://Scenes/Nodes/"+type)
@@ -305,21 +325,3 @@ func _import_singleton(path):
 	PlayerSingleton.set_script(script)
 	get_tree().root.add_child(PlayerSingleton)
 	EditorSingleton.has_player_singleton = true
-
-#====== DRAG HANDLING
-# checks if we can recive the dropped data
-func can_drop_data(_pos, _data):
-	return true
-
-# triggers on target drop
-func drop_data(_pos, data):
-	var nodes = EditorSingleton.node_names
-	var inNode = false
-	var localMousePos = self.get_child(0).get_local_mouse_position()
-	for i in range(0, nodes.size()):
-		if nodes[i] in data:
-			init_scene(nodes[i]+".tscn", localMousePos)
-			inNode = true
-		elif !inNode and i + 1 == nodes.size():
-			var name = init_scene('Expression.tscn', localMousePos)
-			get_node(name).get_node("Lines").get_child(0).set_text(data)

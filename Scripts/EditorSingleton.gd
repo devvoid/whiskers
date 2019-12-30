@@ -12,6 +12,8 @@ onready var menu_help = get_node("/root/Editor/Mount/MainWindow/MenuBar/Menus/He
 
 var in_menu : = false
 
+var undo_redo = UndoRedo.new()
+
 # Used primarily in Graph, but here because it needs to be global.
 # warning-ignore:unused_class_variable
 var has_player_singleton = false
@@ -19,13 +21,11 @@ var has_player_singleton = false
 # For history
 var current_history : = 0
 var history_objects = Dictionary()
-var last_save : = 0
 
 # Used in Graph.gd and GraphNode.gd
 # TODO: Rewrite GraphNode.get_type to not use node_names, so that this can be moved to Graph
 # warning-ignore:unused_class_variable
 var node_names : = ['Dialogue', 'Option', 'Expression', 'Condition', 'Jump', 'End', 'Start', 'Comment']
-var has_graph : = false
 
 func get_node_type(name : String) -> String:
 	var regex : = RegEx.new()
@@ -88,77 +88,13 @@ func _input(event : InputEvent) -> void:
 					menu_help.hide()
 					menu_edit.hide()
 
-func update_demo() -> void:
-	if has_graph:
-		get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph").process_data()
-		get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Demo/Dialogue").data = get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph").data
-
 #===== History Management
-func overwrite_history() -> void:
-	if current_history > 0:
-		var new_history : = Dictionary()
-		for i in range(0, current_history):
-			new_history[i] = history_objects[i]
-		# Overwrite history with our new one
-		history_objects = new_history
-
-func add_history(node, name, offset, text, connects_from, action) -> void:
-	overwrite_history()
-	history_objects[current_history] = {
-			'node': node,
-			'name': name,
-			'offset': offset,
-			'text': text,
-			'connects_from': connects_from,
-			'action': action
-	}
-	EditorSingleton.update_tab_title(true)
-	current_history += 1
+func add_history(_node, _name, _offset, _text, _connects_from, _action) -> void:
+	pass
 
 func undo_history() -> void:
-	var graph : GraphEdit = get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph")
-	if history_objects.size() > 0 and current_history >= 2:
-		# We're in the past
-		var action : String = history_objects[current_history - 1]['action']
-		var object : Dictionary = history_objects[current_history - 1]
-		
-		print(action)
-		if action == 'remove':
-			graph.load_node(object['node']+'.tscn', object['offset'], object['name'], object['text'], false)
-		if action == 'move':
-			if last_instance_of(object['name']):
-				var last_instance = history_objects[last_instance_of(object['name'])]
-				graph.get_node(object['name']).set_offset(last_instance['offset'])
-		if action == 'text':
-			var last_instance = history_objects[last_instance_of(object['name'])]
-			graph.get_node(object['name']).get_node("Lines").get_child(0).set_text(last_instance['text'])
-		if action == 'add':
-			graph.get_node(object['name']).queue_free()
-			update_stats(object['name'], '-1')
-		
-		if 'connect' in action:
-			if action == 'connect':
-				print('disconnect node')
-				var connections = graph.get_connection_list()
-				for i in range(0, connections.size()):
-					if connections[i].to == object['name'] and not connections[i].from in object['connects_from']:
-						graph.disconnect_node(connections[i].from, 0, object['name'], 0) 
-			else:
-				var last_instance = history_objects[last_instance_of(object['name'])]
-				for i in range(0, last_instance['connects_from'].size()):
-					var err = graph.connect_node(last_instance['connects_from'][i+1], 0, object['name'], 0)
-					
-					if (err):
-						print("[EditorSingleton.history_undo]: Failed to connect node")
-		
-		current_history -= 1
-		
-		if last_save == current_history:
-			update_tab_title(false)
-			print('we are on last save')
-		else:
-			update_tab_title(true)
-			print('we are unsaved!')
+	if !undo_redo.is_commiting_action():
+		undo_redo.undo()
 
 func last_instance_of(name : String) -> int:
 	var last_instance_position : int
@@ -196,44 +132,8 @@ func connection_in_timeline(name : String) -> void:
 						print("[EditorSingleton.connection_in_timeline]: Failed to connect nodes")
 
 func redo_history() -> void:
-	var graph : GraphEdit = get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph")
-	if current_history < history_objects.size():
-		# We're in the past
-		var action : String = history_objects[current_history]['action']
-		var object : Dictionary = history_objects[current_history]
-		
-		if action == 'remove':
-			graph.get_node(object['name']).queue_free()
-			update_stats(object['name'], '-1')
-		if action == 'move':
-			graph.get_node(object['name']).set_offset(object['offset'])
-		if action == 'text':
-			graph.get_node(object['name']).get_node("Lines").get_child(0).set_text(object['text'])
-		if action == 'add':
-			graph.load_node(object['node']+'.tscn', object['offset'], object['name'], object['text'], false)
-		
-		if 'connect' in action:
-			if action == 'connect':
-				for i in range(0, object['connects_from'].size()):
-					var err = graph.connect_node(object['connects_from'][i+1], 0, object['name'], 0)
-					
-					if (err):
-						print("[EditorSingleton.redo_history]: Failed to connect nodes")
-			else:
-				print('disconnect node')
-				var connections = graph.get_connection_list()
-				for i in range(0, connections.size()):
-					if connections[i].to == object['name'] and not connections[i].from in object['connects_from']:
-						graph.disconnect_node(connections[i].from, 0, object['name'], 0) 
-		
-		current_history += 1
-	
-		if last_save == current_history:
-			update_tab_title(false)
-			print('we are on last save')
-		else:
-			update_tab_title(true)
-			print('we are unsaved!')
+	if !undo_redo.is_commiting_action():
+		undo_redo.redo()
 
 func update_tab_title(unsaved : bool) -> void:
 	var graph = get_node('/root/Editor/Mount/MainWindow/Editor/Graph')

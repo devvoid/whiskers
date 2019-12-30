@@ -38,7 +38,9 @@ margin_bottom = 63.0
 grow_horizontal = 0
 grow_vertical = 0
 rect_min_size = Vector2( 0, 30 )
-alignment = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
 
 [node name="LineEdit" type="TextEdit" parent="Lines"]
 margin_right = 181.0
@@ -52,7 +54,6 @@ custom_styles/focus = ExtResource( 4 )
 custom_styles/normal = ExtResource( 4 )
 wrap_enabled = true
 caret_blink = true
-
 [connection signal="close_request" from="." to="." method="_on_Node_close_request"]
 [connection signal="dragged" from="." to="." method="_on_Node_dragged"]
 [connection signal="raise_request" from="." to="." method="_on_Node_raise_request"]

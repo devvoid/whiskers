@@ -72,9 +72,6 @@ func _on_menAct_mouse_exited():
 	if(EditorSingleton.in_menu == true):
 		EditorSingleton.in_menu = false
 
-func _on_Update_pressed():
-	EditorSingleton.update_demo()
-
 func _on_Undo_pressed():
 	EditorSingleton.close_all()
 	EditorSingleton.undo_history()

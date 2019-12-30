@@ -1,5 +1,7 @@
 extends GraphNode
 
+onready var undo_redo = EditorSingleton.undo_redo
+
 func _on_Node_close_request():
 	self.queue_free()
 	print('removing node')
@@ -7,11 +9,16 @@ func _on_Node_close_request():
 	EditorSingleton.add_history(get_type(self.name), self.name, self.get_offset(), get_text(), get_node('../').get_connections(self.name), 'remove')
 
 func _on_Node_resize_request(new_minsize):
-	self.rect_size = new_minsize
+	# Trying to allow undo/redo on this
+	# caused some very odd bugs.
+	rect_size = new_minsize
 
-func _on_Node_dragged(_from, to):
+func _on_Node_dragged(from, to):
 	get_node('../').lastNodePosition = to
-	EditorSingleton.add_history(get_type(self.name), self.name, to, get_text(), get_node('../').get_connections(self.name), 'move')
+	undo_redo.create_action("move_node_"+name)
+	undo_redo.add_do_property(self, "offset", to)
+	undo_redo.add_undo_property(self, "offset", from)
+	undo_redo.commit_action()
 
 func _on_Node_resized():
 	get_node("Lines").rect_min_size.y = self.get_rect().size.y - 45
