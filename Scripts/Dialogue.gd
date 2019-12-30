@@ -13,6 +13,10 @@ var data = {}
 
 func _process(delta):
 	timer += delta
+	
+	if block == null:
+		return
+	
 	for i in range(0, get_node("Buttons").get_child_count()):
 		if get_node('Buttons').get_child(i).pressed and !buttonFired and timer >= 0.5:
 			block = parser.next(block.options[i].key)

@@ -69,26 +69,29 @@ func _on_Dialogue_Graph_disconnection_request(from, from_slot, to, to_slot):
 	EditorSingleton.add_history(type, to, self.get_node(to).get_offset(), get_text(to), get_connections(to), 'disconnect')
 
 func _on_BasicNodes_item_activated(index):
-	if(index == 0):
-		init_scene("Dialogue.tscn", false)
-	if(index == 1):
-		init_scene("Option.tscn", false)
-	if(index == 2):
-		init_scene("Jump.tscn", false)
+	match index:
+		0:
+			init_scene("Dialogue.tscn", false)
+		1:
+			init_scene("Option.tscn", false)
+		2:
+			init_scene("Jump.tscn", false)
 
 func _on_AdvancedNodes_item_activated(index):
-	if(index == 0):
-		init_scene("Condition.tscn", false)
-	if(index == 1):
-		init_scene("Expression.tscn", false)
+	match index:
+		0:
+			init_scene("Condition.tscn", false)
+		1:
+			init_scene("Expression.tscn", false)
 
 func _on_UtilityNodes_item_activated(index):
-	if(index == 0):
-		init_scene("Comment.tscn", false)
-	if(index == 1):
-		init_scene("Start.tscn", false)
-	if(index == 2):
-		init_scene("End.tscn", false)
+	match index:
+		0:
+			init_scene("Comment.tscn", false)
+		1:
+			init_scene("Start.tscn", false)
+		2:
+			init_scene("End.tscn", false)
 
 func init_scene(e, location):
 	var scene = load("res://Scenes/Nodes/"+e)
