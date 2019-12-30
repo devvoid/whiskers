@@ -13,8 +13,6 @@ func _ready():
 	
 	if (err1 or err2 or err3):
 		print("[Graph._ready]: Failed to connect node signals. Please ensure all paths are correct.")
-	
-	get_node("../Demo/Dialogue/Text").parse_bbcode("You haven't loaded anything yet! Press [b]Update Demo[/b] to load your current graph!")
 
 func get_connections(name):
 	var list = get_connection_list()
@@ -138,11 +136,6 @@ func load_node(type, location, name, text, size):
 var data = {} # this is the final data, an array of all nodes that we write to file
 func process_data():
 	var connectionList = get_connection_list()
-	# We should save our 'info' tab data!
-	data['info'] = {
-		'name': get_node("../../Info/Info/Name/Input").get_text(),
-		'display_name': get_node("../../Info/Info/DName/Input").get_text(),
-	}
 	# lets save our GraphNodes!
 	for i in range(0, connectionList.size()):
 		var name = connectionList[i].from
@@ -231,9 +224,6 @@ func _open_whiskers(path):
 	file.open(path, File.READ)
 	var loadData = parse_json(file.get_as_text())
 	var nodeDataKeys = loadData.keys()
-	# we should restore our `info` tab data!
-	get_node("../../Info/Info/DName/Input").set_text(loadData['info']['display_name'])
-	get_node("../../Info/Info/Name/Input").set_text(loadData['info']['name'])
 	# we should load our GraphNodes!
 	for i in range(0, nodeDataKeys.size()):
 		var type
@@ -288,25 +278,12 @@ func _on_New_confirmed():
 	clear_graph()
 
 func clear_graph():
-	if EditorSingleton.has_player_singleton:
-		get_tree().root.get_node('PlayerSingleton').queue_free()
-		EditorSingleton.has_player_singleton = false
-		get_node("../../Info/Info/DocFunc/ScrollContainer/Container").reset()
-		get_node("../../Info/Info/DocVars/ScrollContainer/Container").reset()
-	
-	
 	get_node("../../Info/Nodes/Stats/PanelContainer/StatsCon/ONodes/Amount").set_text('0')
 	get_node("../../Info/Nodes/Stats/PanelContainer/StatsCon/DNodes/Amount").set_text('0')
 	EditorSingleton.last_save = 0
 	EditorSingleton.update_tab_title(false)
-	get_node("../Demo/Dialogue").reset()
-	get_node("../Demo/Dialogue").data = {}
 	EditorSingleton.has_graph = false
 	data = {}
-	get_node("../Demo/Dialogue/Text").parse_bbcode("You haven't loaded anything yet! Press [b]Update Demo[/b] to load your current graph!")
-	# we should restore our `info` tab data!
-	get_node("../../Info/Info/DName/Input").set_text('')
-	get_node("../../Info/Info/Name/Input").set_text('')
 	# we should clear the GraphEdit of GraphNodes
 	for child in self.get_children():
 		if not("GraphEditFilter" in child.get_class()) and not ("Control" in child.get_class()):
