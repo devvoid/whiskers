@@ -18,6 +18,8 @@ var timer = 0
 var path = ''
 
 func _ready():
+	update_tab_title(false)
+	
 	var err1 = get_node("../../../../Modals/Save").connect("file_selected", self, "_save_whiskers")
 	var err2 = get_node("../../../../Modals/Open").connect("file_selected", self, "pre_open")
 	
@@ -37,11 +39,15 @@ func get_connections(name):
 func update_tab_title(unsaved : bool) -> void:
 	var tab = get_parent()
 	
-	if unsaved:
-		tab.set_tab_title(0, 'Dialogue Graph*')
-	else:
-		tab.set_tab_title(0, 'Dialogue Graph')
+	var tab_text = "[Unsaved]"
 	
+	if EditorSingleton.current_file_path != "":
+		tab_text = EditorSingleton.current_file_path
+	
+	if unsaved:
+		tab_text += "*"
+	
+	tab.set_tab_title(0, tab_text)
 	tab.update()
 
 # this is really ugly
