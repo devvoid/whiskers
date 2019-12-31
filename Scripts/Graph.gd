@@ -129,9 +129,10 @@ func _undo_add_node(node_name):
 	child_node.queue_free()
 
 # Redo adding a node
-func _redo_add_node(scene, node_name, offset):
+func _redo_add_node(scene, node_name, offset, text = ""):
 	var new_node = scene.instance()
 	new_node.set_name(node_name)
+	new_node.set_text(text)
 	new_node.set_offset(offset)
 	add_child(new_node)
 

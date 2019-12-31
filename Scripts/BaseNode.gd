@@ -7,10 +7,10 @@ onready var undo_redo = EditorSingleton.undo_redo
 onready var old_text = get_text()
 
 func _on_Node_close_request():
-	self.queue_free()
-	print('removing node')
-	EditorSingleton.update_stats(self.name, '-1')
-	EditorSingleton.add_history(get_type(self.name), self.name, self.get_offset(), get_text(), get_node('../').get_connections(self.name), 'remove')
+	undo_redo.create_action("delete_node_"+name)
+	undo_redo.add_do_method(get_parent(), "_undo_add_node", name)
+	undo_redo.add_undo_method(get_parent(), "_redo_add_node", load("res://Scenes/Nodes/"+get_type(name)+".tscn"), name, offset, get_text())
+	undo_redo.commit_action()
 
 func _on_Node_resize_request(new_minsize):
 	# Trying to allow undo/redo on this
@@ -48,7 +48,8 @@ func add_undo(new_text):
 	old_text = new_text
 
 func set_text(text):
-	$Lines/LineEdit.text = text
+	if has_node("Lines/LineEdit"):
+		$Lines/LineEdit.text = text
 
 func _on_LineEdit_focus_exited():
 	add_undo($Lines/LineEdit.text)
