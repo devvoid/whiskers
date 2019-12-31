@@ -27,9 +27,6 @@ func _on_Node_dragged(from, to):
 func _on_Node_resized():
 	get_node("Lines").rect_min_size.y = self.get_rect().size.y - 45
 
-func _on_Node_text_changed():
-	pass
-
 func get_type(name):
 	var nodes = EditorSingleton.node_names
 	for i in range(0, nodes.size()):
