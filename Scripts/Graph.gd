@@ -34,6 +34,16 @@ func get_connections(name):
 	
 	return connections
 
+func update_tab_title(unsaved : bool) -> void:
+	var tab = get_parent()
+	
+	if unsaved:
+		tab.set_tab_title(0, 'Dialogue Graph*')
+	else:
+		tab.set_tab_title(0, 'Dialogue Graph')
+	
+	tab.update()
+
 # this is really ugly
 # but I can't figure out a way to get our GraphEdit to redraw on command
 # so until I can, this very ugly hack will have to do.
@@ -54,6 +64,7 @@ func _physics_process(delta):
 		timer = 0
 
 func pre_open(openPath):
+	EditorSingleton.current_file_path = openPath
 	path = openPath
 	open = true
 	preFire = true
@@ -230,11 +241,19 @@ func _save_whiskers(path):
 	print('saving file to: ', path)
 	var saveFile = File.new()
 	saveFile.open(path, File.WRITE)
-	saveFile.store_line(to_json(data))
+	
+	# Note: For some reason, opening dialog causes errors
+	# if any node names contain the @ symbol.
+	# I don't know where these @ symbols are coming from, I'm tired,
+	# I just want it to work, I'm giving up for now.
+	# TODO: Find where the @ symbols are coming from and stop them.
+	var save_text = to_json(data)
+	save_text.replace('@', '')
+	saveFile.store_line(save_text)
 	saveFile.close()
 	# clear our data node
 	data = {}
-	EditorSingleton.update_tab_title(false)
+	update_tab_title(false)
 
 #======> Open file
 func _open_whiskers(path):
@@ -293,13 +312,14 @@ func _open_whiskers(path):
 
 #=== NEW FILE handling
 func _on_New_confirmed():
+	EditorSingleton.current_file_path = ""
 	clear_graph()
 
 func clear_graph():
 	get_node("../../Info/Nodes/Stats/PanelContainer/StatsCon/ONodes/Amount").set_text('0')
 	get_node("../../Info/Nodes/Stats/PanelContainer/StatsCon/DNodes/Amount").set_text('0')
 	EditorSingleton.undo_redo.clear_history()
-	EditorSingleton.update_tab_title(false)
+	update_tab_title(false)
 	data = {}
 	# we should clear the GraphEdit of GraphNodes
 	for child in self.get_children():

@@ -46,6 +46,14 @@ func _on_About_pressed():
 
 func _on_Save_pressed():
 	EditorSingleton.close_all()
+	
+	if EditorSingleton.current_file_path == "":
+		saveDialog.show()
+	else:
+		get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph")._save_whiskers(EditorSingleton.current_file_path)
+
+func _on_SaveAs_pressed():
+	EditorSingleton.close_all()
 	saveDialog.show()
 
 func _on_New_pressed():

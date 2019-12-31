@@ -1,5 +1,6 @@
 extends Node
 
+onready var modal_new = get_node("/root/Editor/Mount/Modals/New")
 onready var modal_save = get_node("/root/Editor/Mount/Modals/Save")
 onready var modal_open = get_node("/root/Editor/Mount/Modals/Open")
 onready var modal_quit_conf = get_node("/root/Editor/Mount/Modals/QuitConf")
@@ -13,18 +14,12 @@ var in_menu : = false
 
 var undo_redo = UndoRedo.new()
 
-# Used primarily in Graph, but here because it needs to be global.
-# warning-ignore:unused_class_variable
-var has_player_singleton = false
-
-# For history
-var current_history : = 0
-var history_objects = Dictionary()
+var current_file_path: String = ""
 
 # Used in Graph.gd and GraphNode.gd
 # TODO: Rewrite GraphNode.get_type to not use node_names, so that this can be moved to Graph
 # warning-ignore:unused_class_variable
-var node_names : = ['Dialogue', 'Option', 'Expression', 'Condition', 'Jump', 'End', 'Start', 'Comment']
+var node_names = ['Dialogue', 'Option', 'Expression', 'Condition', 'Jump', 'End', 'Start', 'Comment']
 
 func get_node_type(name : String) -> String:
 	var regex : = RegEx.new()
@@ -42,25 +37,32 @@ func get_node_type(name : String) -> String:
 
 func _unhandled_input(event : InputEvent) -> void:
 	if event is InputEventKey:
-		if Input.is_action_pressed("save"):
+		if Input.is_action_just_pressed("save"):
+			close_all()
+			
+			if current_file_path == "":
+				modal_save.show()
+			else:
+				get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph")._save_whiskers(current_file_path)
+		if Input.is_action_just_pressed("save_as"):
 			close_all()
 			modal_save.show()
-			modal_save.current_file = get_node("/root/Editor/Mount/MainWindow/Editor/Info/Info/Name/Input").get_text()+'.json'
-		if Input.is_action_pressed("open"):
+			modal_save.current_file = ""
+		if Input.is_action_just_pressed("open"):
 			close_all()
 			modal_open.show()
-		if Input.is_action_pressed("quit"):
+		if Input.is_action_just_pressed("quit"):
 			close_all()
 			modal_quit_conf.show()
-		if Input.is_action_pressed("help"):
+		if Input.is_action_just_pressed("help"):
 			close_all()
 			modal_about.show()
-		if Input.is_action_pressed("new"):
+		if Input.is_action_just_pressed("new"):
 			close_all()
-			get_node("/root/Editor/Mount/Modals/New").show()
-		if Input.is_action_pressed("undo"):
+			modal_new.show()
+		if Input.is_action_just_pressed("undo"):
 			undo_history()
-		if Input.is_action_pressed("redo"):
+		if Input.is_action_just_pressed("redo"):
 			redo_history()
 
 func close_all() -> void:
@@ -84,61 +86,13 @@ func _input(event : InputEvent) -> void:
 					menu_edit.hide()
 
 #===== History Management
-func add_history(_node, _name, _offset, _text, _connects_from, _action) -> void:
-	pass
-
 func undo_history() -> void:
 	if !undo_redo.is_commiting_action():
 		undo_redo.undo()
 
-func last_instance_of(name : String) -> int:
-	var last_instance_position : int
-	for i in range(0, current_history - 1):
-		if history_objects[i]['name'] == name:
-			last_instance_position = i
-	return last_instance_position
-
-func connection_in_timeline(name : String) -> void:
-	var graph : GraphEdit = get_node("/root/Editor/Mount/MainWindow/Editor/Graph/Dialogue Graph")
-	var list : Array = graph.get_connection_list()
-	var connections : = Dictionary()
-	var connects_from : = Array()
-	
-	for i in range(0, current_history - 1):
-		if name == history_objects[i]['name']:
-			connections = history_objects[i]['connects_from']
-
-	var connection_count : int = connections.size()
-	for i in range(0, connection_count):
-		if connection_count > 0:
-			connects_from.append(connections[i+1])
-
-	for i in range(0, list.size()):
-		if graph.has_node(list[i]['to']) and not list[i]['from'] in connects_from:
-			graph.disconnect_node(list[i]['from'], 0, name, 0)
-	
-	for i in range(0, current_history - 1):
-		if history_objects[i]['connects_from']:
-			for j in range(0, history_objects[i]['connects_from'].size()):
-				if history_objects[i]['connects_from'][j+1] != name and history_objects[i]['name'] == name:
-					var err = graph.connect_node(history_objects[i]['connects_from'][j+1], 0, name, 0)
-					
-					if (err):
-						print("[EditorSingleton.connection_in_timeline]: Failed to connect nodes")
-
 func redo_history() -> void:
 	if !undo_redo.is_commiting_action():
 		undo_redo.redo()
-
-func update_tab_title(unsaved : bool) -> void:
-	var graph = get_node('/root/Editor/Mount/MainWindow/Editor/Graph')
-	
-	if unsaved:
-		graph.set_tab_title(0, 'Dialogue Graph*')
-	else:
-		graph.set_tab_title(0, 'Dialogue Graph')
-	
-	graph.update()
 
 func update_stats(what : String, amount : String) -> void:
 	if 'Option' in what:
@@ -147,3 +101,4 @@ func update_stats(what : String, amount : String) -> void:
 	if 'Dialogue' in what:
 		var amount_node = get_node("/root/Editor/Mount/MainWindow/Editor/Info/Nodes/Stats/PanelContainer/StatsCon/DNodes/Amount")
 		amount_node.set_text(str(int(amount_node.get_text()) + int(amount)))
+

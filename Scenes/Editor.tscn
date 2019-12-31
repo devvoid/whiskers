@@ -292,6 +292,7 @@ margin_bottom = 30.0
 dragger_visibility = 2
 
 [node name="Menus" type="GridContainer" parent="Mount/MainWindow/MenuBar"]
+editor/display_folded = true
 margin_right = 1004.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 0, 30 )
@@ -307,10 +308,10 @@ text = "File"
 
 [node name="Menu" type="PanelContainer" parent="Mount/MainWindow/MenuBar/Menus/File"]
 visible = false
-margin_left = 10.4972
-margin_top = 34.3308
-margin_right = 143.497
-margin_bottom = 108.331
+margin_left = 10.0
+margin_top = 34.0
+margin_right = 158.0
+margin_bottom = 160.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = ExtResource( 4 )
@@ -318,18 +319,18 @@ custom_styles/panel = ExtResource( 4 )
 [node name="PanelContainer" type="PanelContainer" parent="Mount/MainWindow/MenuBar/Menus/File/Menu"]
 margin_left = 1.0
 margin_top = 1.0
-margin_right = 132.0
+margin_right = 147.0
 margin_bottom = 125.0
 custom_styles/panel = SubResource( 2 )
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 124.0
+margin_right = 139.0
 margin_bottom = 117.0
 
 [node name="New" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_right = 116.0
+margin_right = 132.0
 margin_bottom = 14.0
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
@@ -343,15 +344,15 @@ mouse_filter = 2
 dragger_visibility = 2
 
 [node name="Action" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/New/HSplitContainer"]
-margin_right = 58.0
+margin_right = 66.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
 text = "New"
 
 [node name="Hotkey" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/New/HSplitContainer"]
-margin_left = 58.0
-margin_right = 116.0
+margin_left = 66.0
+margin_right = 132.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
@@ -360,9 +361,9 @@ text = "CTRL-N"
 align = 2
 
 [node name="Open" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_top = 26.0
-margin_right = 116.0
-margin_bottom = 40.0
+margin_top = 18.0
+margin_right = 132.0
+margin_bottom = 32.0
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -375,15 +376,15 @@ mouse_filter = 2
 dragger_visibility = 2
 
 [node name="Action" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Open/HSplitContainer"]
-margin_right = 58.0
+margin_right = 66.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
 text = "Open"
 
 [node name="Hotkey" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Open/HSplitContainer"]
-margin_left = 58.0
-margin_right = 116.0
+margin_left = 66.0
+margin_right = 132.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
@@ -392,14 +393,14 @@ text = "CTRL-O"
 align = 2
 
 [node name="HSeparator4" type="HSeparator" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_top = 18.0
-margin_right = 116.0
-margin_bottom = 22.0
+margin_top = 36.0
+margin_right = 132.0
+margin_bottom = 40.0
 custom_styles/separator = SubResource( 5 )
 
 [node name="Save" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
 margin_top = 44.0
-margin_right = 116.0
+margin_right = 132.0
 margin_bottom = 58.0
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
@@ -413,15 +414,15 @@ mouse_filter = 2
 dragger_visibility = 2
 
 [node name="Action" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Save/HSplitContainer"]
-margin_right = 58.0
+margin_right = 66.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
 text = "Save"
 
 [node name="Hotkey" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Save/HSplitContainer"]
-margin_left = 58.0
-margin_right = 116.0
+margin_left = 66.0
+margin_right = 132.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
@@ -429,15 +430,47 @@ custom_colors/font_color = Color( 0.611765, 0.611765, 0.611765, 1 )
 text = "CTRL-S"
 align = 2
 
+[node name="SaveAs" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
+margin_top = 70.0
+margin_right = 132.0
+margin_bottom = 84.0
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/normal = SubResource( 4 )
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/SaveAs"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+dragger_visibility = 2
+
+[node name="Action" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/SaveAs/HSplitContainer"]
+margin_right = 62.0
+margin_bottom = 14.0
+size_flags_horizontal = 7
+size_flags_vertical = 6
+text = "Save As"
+
+[node name="Hotkey" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/SaveAs/HSplitContainer"]
+margin_left = 62.0
+margin_right = 132.0
+margin_bottom = 14.0
+size_flags_horizontal = 7
+size_flags_vertical = 6
+custom_colors/font_color = Color( 0.611765, 0.611765, 0.611765, 1 )
+text = "CTRL-ALT-S"
+align = 2
+
 [node name="HSeparator" type="HSeparator" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_top = 62.0
-margin_right = 116.0
-margin_bottom = 66.0
+margin_top = 88.0
+margin_right = 132.0
+margin_bottom = 92.0
 custom_styles/separator = SubResource( 5 )
 
 [node name="Quit" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
 margin_top = 96.0
-margin_right = 116.0
+margin_right = 132.0
 margin_bottom = 110.0
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
@@ -451,15 +484,15 @@ mouse_filter = 2
 dragger_visibility = 2
 
 [node name="Action" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Quit/HSplitContainer"]
-margin_right = 58.0
+margin_right = 66.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
 text = "Quit"
 
 [node name="Hotkey" type="Label" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Quit/HSplitContainer"]
-margin_left = 58.0
-margin_right = 116.0
+margin_left = 66.0
+margin_right = 132.0
 margin_bottom = 14.0
 size_flags_horizontal = 7
 size_flags_vertical = 6
@@ -627,6 +660,7 @@ margin_right = 1004.0
 margin_bottom = 580.0
 
 [node name="Info" type="TabContainer" parent="Mount/MainWindow/Editor"]
+editor/display_folded = true
 margin_right = 230.0
 margin_bottom = 550.0
 rect_min_size = Vector2( 230, 0 )
@@ -820,6 +854,9 @@ script = ExtResource( 17 )
 [connection signal="mouse_entered" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Save" to="Mount/MainWindow/MenuBar/Menus" method="_on_menAct_mouse_entered"]
 [connection signal="mouse_exited" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Save" to="Mount/MainWindow/MenuBar/Menus" method="_on_menAct_mouse_exited"]
 [connection signal="pressed" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Save" to="Mount/MainWindow/MenuBar/Menus" method="_on_Save_pressed"]
+[connection signal="mouse_entered" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/SaveAs" to="Mount/MainWindow/MenuBar/Menus" method="_on_menAct_mouse_entered"]
+[connection signal="mouse_exited" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/SaveAs" to="Mount/MainWindow/MenuBar/Menus" method="_on_menAct_mouse_exited"]
+[connection signal="pressed" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/SaveAs" to="Mount/MainWindow/MenuBar/Menus" method="_on_SaveAs_pressed"]
 [connection signal="mouse_entered" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Quit" to="Mount/MainWindow/MenuBar/Menus" method="_on_menAct_mouse_entered"]
 [connection signal="mouse_exited" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Quit" to="Mount/MainWindow/MenuBar/Menus" method="_on_menAct_mouse_exited"]
 [connection signal="pressed" from="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer/Quit" to="Mount/MainWindow/MenuBar/Menus" method="_on_Quit_pressed"]
