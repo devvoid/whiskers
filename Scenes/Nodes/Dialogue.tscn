@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/Themes/Nodes/Normal/Dialogue.tres" type="StyleBox" id=1]
 [ext_resource path="res://Assets/Themes/Nodes/Selected/DialogueSelected.tres" type="StyleBox" id=2]
-[ext_resource path="res://Scripts/GraphNode.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/BaseNode.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Themes/Nodes/Normal/line.tres" type="StyleBox" id=4]
 
 [node name="Dialogue" type="GraphNode"]
@@ -59,4 +59,5 @@ caret_blink = true
 [connection signal="raise_request" from="." to="." method="_on_Node_raise_request"]
 [connection signal="resize_request" from="." to="." method="_on_Node_resize_request"]
 [connection signal="resized" from="." to="." method="_on_Node_resized"]
-[connection signal="text_changed" from="Lines/LineEdit" to="." method="_on_Node_text_changed"]
+[connection signal="focus_exited" from="Lines/LineEdit" to="." method="_on_LineEdit_focus_exited"]
+[connection signal="request_completion" from="Lines/LineEdit" to="." method="_on_LineEdit_focus_exited"]

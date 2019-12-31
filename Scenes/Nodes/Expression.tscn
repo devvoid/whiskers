@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/Themes/Nodes/Normal/Expression.tres" type="StyleBox" id=1]
 [ext_resource path="res://Assets/Themes/Nodes/Selected/ExpressionSelected.tres" type="StyleBox" id=2]
-[ext_resource path="res://Scripts/GraphNode.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/BaseNode.gd" type="Script" id=3]
 [ext_resource path="res://Assets/Themes/Nodes/Normal/line.tres" type="StyleBox" id=4]
 
 [node name="Expression" type="GraphNode"]
@@ -49,4 +49,5 @@ placeholder_text = "littleMouse == \"awesome\""
 [connection signal="dragged" from="." to="." method="_on_Node_dragged"]
 [connection signal="raise_request" from="." to="." method="_on_Node_raise_request"]
 [connection signal="resize_request" from="." to="." method="_on_Node_resize_request"]
-[connection signal="text_changed" from="Lines/LineEdit" to="." method="_on_Node_line_changed"]
+[connection signal="focus_exited" from="Lines/LineEdit" to="." method="_on_LineEdit_focus_exited"]
+[connection signal="text_entered" from="Lines/LineEdit" to="." method="_on_LineEdit_text_entered"]

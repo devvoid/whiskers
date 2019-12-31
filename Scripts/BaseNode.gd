@@ -1,6 +1,10 @@
+class_name BaseNode
+
 extends GraphNode
 
 onready var undo_redo = EditorSingleton.undo_redo
+
+onready var old_text = get_text()
 
 func _on_Node_close_request():
 	self.queue_free()
@@ -26,11 +30,6 @@ func _on_Node_resized():
 func _on_Node_text_changed():
 	pass
 
-func _on_Node_line_changed(text):
-	var length = text.length()
-	if length > 0 and text[length - 1] == ' ':
-		EditorSingleton.add_history(get_type(self.name), self.name, self.get_offset(), text, get_node('../').get_connections(self.name), 'text')
-
 func get_type(name):
 	var nodes = EditorSingleton.node_names
 	for i in range(0, nodes.size()):
@@ -42,6 +41,23 @@ func get_text():
 		return self.get_node('Lines').get_child(0).get_text()
 	else:
 		return ''
+
+func add_undo(new_text):
+	undo_redo.create_action("edit_text_"+name)
+	undo_redo.add_do_method(self, "set_text", new_text)
+	undo_redo.add_undo_method(self, "set_text", old_text)
+	undo_redo.commit_action()
+	
+	old_text = new_text
+
+func set_text(text):
+	$Lines/LineEdit.text = text
+
+func _on_LineEdit_focus_exited():
+	add_undo($Lines/LineEdit.text)
+
+func _on_LineEdit_text_entered(new_text):
+	add_undo(new_text)
 
 func _on_Node_raise_request():
 	self.raise()

@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/Themes/Nodes/Normal/Utility.tres" type="StyleBox" id=1]
 [ext_resource path="res://Assets/Themes/Nodes/Selected/UtilitySelected.tres" type="StyleBox" id=2]
-[ext_resource path="res://Scripts/GraphNode.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/BaseNode.gd" type="Script" id=3]
 
 [sub_resource type="StyleBoxFlat" id=1]
 content_margin_left = 5.0
@@ -43,7 +43,7 @@ slot/1/right_type = 0
 slot/1/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 3 )
 
-[node name="LineEdit" type="Label" parent="."]
+[node name="Label1" type="Label" parent="."]
 margin_left = 10.0
 margin_top = 33.0
 margin_right = 199.0
@@ -52,7 +52,7 @@ hint_tooltip = "Function calling and one line expressions"
 custom_styles/normal = SubResource( 1 )
 text = "Put me on dead-end Nodes!"
 
-[node name="Label" type="Label" parent="."]
+[node name="Label2" type="Label" parent="."]
 margin_left = 10.0
 margin_top = 57.0
 margin_right = 199.0

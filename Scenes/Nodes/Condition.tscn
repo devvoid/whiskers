@@ -2,7 +2,8 @@
 
 [ext_resource path="res://Assets/Themes/Nodes/Normal/Condition.tres" type="StyleBox" id=1]
 [ext_resource path="res://Assets/Themes/Nodes/Selected/ConditionSelected.tres" type="StyleBox" id=2]
-[ext_resource path="res://Scripts/GraphNode.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/BaseNode.gd" type="Script" id=3]
+
 
 [node name="Condition" type="GraphNode"]
 anchor_left = 0.5
