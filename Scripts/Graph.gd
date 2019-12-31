@@ -66,16 +66,16 @@ func get_text(from):
 		return ''
 
 func _on_Dialogue_Graph_connection_request(from, from_slot, to, to_slot):
-	var err = connect_node(from, from_slot, to, to_slot)
-	if (err):
-		print("[Graph._on_Dialogue_Graph_connection_request]: Failed to connect node " + from + " to " + to)
-	var type = EditorSingleton.get_node_type(to)
-	EditorSingleton.add_history(type, to, self.get_node(to).get_offset(), get_text(to), get_connections(to), 'connect')
+	undo_redo.create_action("connect_node_"+from+"_to_"+to)
+	undo_redo.add_do_method(self, "connect_node", from, from_slot, to, to_slot)
+	undo_redo.add_undo_method(self, "disconnect_node", from, from_slot, to, to_slot)
+	undo_redo.commit_action()
 
 func _on_Dialogue_Graph_disconnection_request(from, from_slot, to, to_slot):
-	disconnect_node(from, from_slot, to, to_slot)
-	var type = EditorSingleton.get_node_type(to)
-	EditorSingleton.add_history(type, to, self.get_node(to).get_offset(), get_text(to), get_connections(to), 'disconnect')
+	undo_redo.create_action("disconnect_node_"+from+"_to_"+to)
+	undo_redo.add_do_method(self, "disconnect_node", from, from_slot, to, to_slot)
+	undo_redo.add_undo_method(self, "connect_node", from, from_slot, to, to_slot)
+	undo_redo.commit_action()
 
 func _on_BasicNodes_item_activated(index):
 	match index:
