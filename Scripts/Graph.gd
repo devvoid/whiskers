@@ -20,9 +20,8 @@ var path = ''
 func _ready():
 	var err1 = get_node("../../../../Modals/Save").connect("file_selected", self, "_save_whiskers")
 	var err2 = get_node("../../../../Modals/Open").connect("file_selected", self, "pre_open")
-	var err3 = get_node("../../../../Modals/Import").connect("file_selected", self, "_import_singleton")
 	
-	if (err1 or err2 or err3):
+	if (err1 or err2):
 		print("[Graph._ready]: Failed to connect node signals. Please ensure all paths are correct.")
 
 func get_connections(name):
@@ -234,7 +233,6 @@ func _save_whiskers(path):
 	saveFile.close()
 	# clear our data node
 	data = {}
-	EditorSingleton.last_save = EditorSingleton.current_history
 	EditorSingleton.update_tab_title(false)
 
 #======> Open file
@@ -291,7 +289,6 @@ func _open_whiskers(path):
 	
 	self.set_scroll_ofs(scrollTo)
 	self.set_scroll_ofs(scrollTo)
-	EditorSingleton.has_graph = true
 
 #=== NEW FILE handling
 func _on_New_confirmed():
@@ -300,28 +297,10 @@ func _on_New_confirmed():
 func clear_graph():
 	get_node("../../Info/Nodes/Stats/PanelContainer/StatsCon/ONodes/Amount").set_text('0')
 	get_node("../../Info/Nodes/Stats/PanelContainer/StatsCon/DNodes/Amount").set_text('0')
-	EditorSingleton.last_save = 0
+	EditorSingleton.undo_redo.clear_history()
 	EditorSingleton.update_tab_title(false)
-	EditorSingleton.has_graph = false
 	data = {}
 	# we should clear the GraphEdit of GraphNodes
 	for child in self.get_children():
 		if not("GraphEditFilter" in child.get_class()) and not ("Control" in child.get_class()):
 			child.queue_free()
-			
-
-#==== IMPORT PLAYER SINGLETON
-func _import_singleton(path):
-	var file = File.new()
-	var script = GDScript.new()
-	var PlayerSingleton = Control.new()
-	PlayerSingleton.set_name('PlayerSingleton')
-	
-	file.open(path, File.READ)
-	var loadData = file.get_as_text()
-	
-	script.set_source_code(loadData)
-	script.reload()
-	PlayerSingleton.set_script(script)
-	get_tree().root.add_child(PlayerSingleton)
-	EditorSingleton.has_player_singleton = true
