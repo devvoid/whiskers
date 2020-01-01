@@ -146,6 +146,7 @@ anchor_bottom = 1.0
 custom_styles/panel = SubResource( 1 )
 
 [node name="Modals" type="Control" parent="Mount"]
+editor/display_folded = true
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 1014.0
@@ -202,7 +203,7 @@ dialog_text = "Are you sure you want to quit? Any unsaved
 dialog_hide_on_ok = false
 
 [node name="About" type="WindowDialog" parent="Mount/Modals"]
-visible = true
+editor/display_folded = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -292,7 +293,6 @@ margin_bottom = 30.0
 dragger_visibility = 2
 
 [node name="Menus" type="GridContainer" parent="Mount/MainWindow/MenuBar"]
-editor/display_folded = true
 margin_right = 1004.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 0, 30 )
@@ -431,9 +431,9 @@ text = "CTRL-S"
 align = 2
 
 [node name="SaveAs" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_top = 70.0
+margin_top = 62.0
 margin_right = 132.0
-margin_bottom = 84.0
+margin_bottom = 76.0
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -463,15 +463,15 @@ text = "CTRL-ALT-S"
 align = 2
 
 [node name="HSeparator" type="HSeparator" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_top = 88.0
+margin_top = 80.0
 margin_right = 132.0
-margin_bottom = 92.0
+margin_bottom = 84.0
 custom_styles/separator = SubResource( 5 )
 
 [node name="Quit" type="Button" parent="Mount/MainWindow/MenuBar/Menus/File/Menu/PanelContainer/VBoxContainer"]
-margin_top = 96.0
+margin_top = 88.0
 margin_right = 132.0
-margin_bottom = 110.0
+margin_bottom = 102.0
 custom_styles/hover = SubResource( 3 )
 custom_styles/pressed = SubResource( 3 )
 custom_styles/focus = SubResource( 3 )
@@ -660,7 +660,6 @@ margin_right = 1004.0
 margin_bottom = 580.0
 
 [node name="Info" type="TabContainer" parent="Mount/MainWindow/Editor"]
-editor/display_folded = true
 margin_right = 230.0
 margin_bottom = 550.0
 rect_min_size = Vector2( 230, 0 )
@@ -669,6 +668,7 @@ tab_align = 0
 drag_to_rearrange_enabled = true
 
 [node name="Nodes" type="VBoxContainer" parent="Mount/MainWindow/Editor/Info"]
+editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 5.0

@@ -1,5 +1,8 @@
 class_name WhiskersParser
 
+# Format is major.minor.patch, two digits for each.
+const WHISKERS_VERSION = 100000
+
 var data : Dictionary
 var current_block : Dictionary
 var format_dictionary : Dictionary = {} setget set_format_dictionary
@@ -76,7 +79,7 @@ func next(selected_option_key : String = "") -> Dictionary:
 		next_block = process_block(option_block)
 		
 	elif not current_block.options.empty():
-		print("[WARN]: no option was passed as argument, but there was options available. This could cause an infinite loop. Use wisely.")
+		print("[WARN]: No option passed as an argument, but options are available! This could cause an infinite loop!")
 	
 	else:
 		next_block = process_block(current_block)

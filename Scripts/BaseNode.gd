@@ -6,6 +6,9 @@ onready var undo_redo = EditorSingleton.undo_redo
 
 onready var old_text = get_text()
 
+func _ready():
+	name = name.replace("@", "")
+
 func _on_Node_close_request():
 	undo_redo.create_action("delete_node_"+name)
 	undo_redo.add_do_method(get_parent(), "_undo_add_node", name)
